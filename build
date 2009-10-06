@@ -1,0 +1,16 @@
+#!/bin/sh
+
+compc \
+-source-path=lib/ \
+-include-sources=lib/br/ \
+-include-sources+=lib/com/ \
+-strict=true \
+-warnings=true \
+-output=bin/TrazzleLib.swc
+
+compc \
+-source-path=core/ \
+-include-sources=core/ \
+-strict=true \
+-warnings=true \
+-output=bin/TrazzleCore.swc
