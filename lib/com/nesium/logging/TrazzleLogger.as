@@ -1,6 +1,7 @@
 package com.nesium.logging
 {
 	
+	import com.nesium.logging.zz;
 	import com.nesium.remoting.DuplexGateway;
 	
 	import flash.display.BitmapData;
@@ -16,6 +17,7 @@ package com.nesium.logging
 	import flash.utils.Timer;
 	
 	import mx.graphics.codec.PNGEncoder;
+	
 	
 	
 	public class TrazzleLogger extends EventDispatcher
@@ -34,6 +36,7 @@ package com.nesium.logging
 		private static var g_lastFrames:int;
 		private static var g_lastTimeStamp:Number;
 		private static var g_monitorTimer:Timer;
+		private static var g_fileObservers:Object;
 		
 		
 		
@@ -43,7 +46,9 @@ package com.nesium.logging
 		public function TrazzleLogger()
 		{
 			g_gateway = new DuplexGateway(k_host, k_port);
+			g_gateway.registerServiceWithName(this, 'FileObservingService');
 			g_gateway.connectToRemote();
+			g_fileObservers = {};
 		}
 		
 		
@@ -113,6 +118,36 @@ package com.nesium.logging
 			g_gateway.invokeRemoteService('MonitoringService', 'startMonitoring', g_stage.frameRate);
 		}
 		
+		public function observeFile(path:String, callback:Function, remove:Boolean=false):void
+		{
+			if (!g_stage)
+			{
+				throwNotInitedError();
+				return;
+			}
+			var observers:Array = g_fileObservers[path];
+			var index:int;
+			if (observers && (index = observers.indexOf(callback)) != -1)
+			{
+				if (remove)
+				{
+					observers.splice(index, 1);
+					if (observers.length == 0)
+					{
+						g_gateway.invokeRemoteService('FileObservingService', 'stopObservingFile', 
+							path);
+						g_fileObservers[path] = null;
+					}
+				}
+			}
+			else if (!remove)
+			{
+				observers = g_fileObservers[path] = [];
+				observers.push(callback);
+				g_gateway.invokeRemoteService('FileObservingService', 'startObservingFile', path);
+			}
+		}
+		
 		public function stopPerformanceMonitoring():void
 		{
 			if (!g_monitorTimer) return;
@@ -157,6 +192,19 @@ package com.nesium.logging
 			g_notInitedErrorThrown = true;
 			throw new Error('TrazzleLogger not inited. Please make sure to call zz_init before ' + 
 				'using any logger methods!');
+		}
+		
+		
+		
+		//*****************************************************************************************
+		//*                                    Internal Methods                                   *
+		//*****************************************************************************************
+		zz function fileDidChange(path:String):void
+		{
+			var observers:Array = g_fileObservers[path];
+			if (!observers) return;
+			for each (var observer:Function in observers)
+				observer.apply(null, [path]);
 		}
 		
 		

@@ -8,6 +8,7 @@
 package com.nesium.remoting
 {
 
+	import com.nesium.logging.zz;
 	import com.nesium.remoting.RemoteService;
 	import com.nesium.remoting.types.AMFActionMessage;
 	import com.nesium.remoting.types.AMFMessageBody;
@@ -22,6 +23,8 @@ package com.nesium.remoting
 	import flash.system.Security;
 	import flash.utils.ByteArray;
 	import flash.utils.describeType;
+	
+	use namespace zz;
 	
 	public class DuplexGateway
 	{
