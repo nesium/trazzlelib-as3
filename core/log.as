@@ -1,17 +1,30 @@
 package
 {
 	import flash.display.BitmapData;
-	import flash.utils.getDefinitionByName;
 	public function log(...rest):void
 	{
-		try
-		{
-			var logger:Class = getDefinitionByName('com.nesium.logging.TrazzleLogger') as Class;
-			if (rest.length == 1 && rest[0] is BitmapData)
-				logger['instance']().logBitmapData(rest[0]);
-			else
-				logger['instance']().log(rest.toString());
+		if (!initialized)
+			initLogger();
+		if (!logger)
+			return;
+		if (rest.length == 1 && rest[0] is BitmapData)
+			logger.logBitmapData(rest[0]);
+		else
+			logger.log(rest.toString());
 		}
-		catch (e:Error) {}
+}
+
+var logger : Object;
+var initialized : Boolean;
+
+import flash.utils.getDefinitionByName;
+function initLogger() : void
+{
+	initialized = true;
+	try
+	{
+		var loggerClass:Class = getDefinitionByName('com.nesium.logging.TrazzleLogger') as Class;
+		logger = loggerClass['instance']();
 	}
+	catch (e:Error) {}
 }
