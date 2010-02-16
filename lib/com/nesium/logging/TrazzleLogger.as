@@ -80,6 +80,14 @@ package com.nesium.logging
 			send(msg);
 		}
 		
+		public function beep():void{
+			if (!g_stage){
+				throwNotInitedError();
+				return;
+			}
+			g_gateway.invokeRemoteService('LoggingService', 'beep');
+		}
+		
 		public function logBitmapData(bmp:BitmapData):void
 		{
 			if (!g_stage)
