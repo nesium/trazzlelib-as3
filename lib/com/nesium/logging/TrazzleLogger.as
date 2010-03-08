@@ -70,14 +70,14 @@ package com.nesium.logging
 			return g_stage;
 		}
 		
-		public function log(msg:String):void
+		public function log(msg:String, stackIndex:uint=0):void
 		{
 			if (!g_stage)
 			{
 				throwNotInitedError();
 				return;
 			}
-			send(msg);
+			send(msg, stackIndex);
 		}
 		
 		public function beep():void{
