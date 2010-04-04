@@ -221,8 +221,8 @@ package com.nesium.logging
 		//*****************************************************************************************
 		private function send(message:String, stackIndex:uint=0):void
 		{
-			var stacktrace:StackTrace = new StackTrace();
-			var logMessage:LogMessageVO = new LogMessageVO(message, stacktrace, stackIndex + 4);
+			var logMessage:LogMessageVO = new LogMessageVO(message, new Error().getStackTrace(), 
+				stackIndex + 4);
 			g_gateway.invokeRemoteService('LoggingService', 'log', logMessage);
 		}
 		
@@ -289,8 +289,7 @@ internal class LogMessageVO
 	//*****************************************************************************************
 	//*                                     Public Methods                                    *
 	//*****************************************************************************************
-	public function LogMessageVO(aMessage:String, aStacktrace:StackTrace, 
-		aStackIndex:uint)
+	public function LogMessageVO(aMessage:String, aStacktrace:String, aStackIndex:uint)
 	{
 		levelName = '';
 		if (aMessage.charAt(0) == '#')
@@ -305,40 +304,7 @@ internal class LogMessageVO
 		}
 		timestamp = getTimer();
 		message = aMessage;
-		stacktrace = aStacktrace.toString();
+		stacktrace = aStacktrace;
 		stackIndex = aStackIndex;
-	}
-}
-
-
-
-internal class StackTrace
-{
-
-	//*****************************************************************************************
-	//*                                   Private Properties                                  *
-	//*****************************************************************************************
-	private var m_stackTrace:String;
-	
-	
-	
-	//*****************************************************************************************
-	//*                                     Public Methods                                    *
-	//*****************************************************************************************
-	public function StackTrace()
-	{
-		try
-		{
-			throw new Error();
-		}
-		catch (error:Error)
-		{
-			m_stackTrace = error.getStackTrace();
-		}
-	}
-	
-	public function toString():String
-	{
-		return m_stackTrace;
 	}
 }
