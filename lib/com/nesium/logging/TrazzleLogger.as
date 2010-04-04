@@ -9,14 +9,13 @@ package com.nesium.logging
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
+	import flash.geom.Rectangle;
 	import flash.net.registerClassAlias;
 	import flash.system.System;
 	import flash.utils.ByteArray;
 	import flash.utils.describeType;
 	import flash.utils.getTimer;
 	import flash.utils.Timer;
-	
-	import mx.graphics.codec.PNGEncoder;
 	
 	
 	
@@ -95,8 +94,8 @@ package com.nesium.logging
 				throwNotInitedError();
 				return;
 			}
-			g_gateway.invokeRemoteService('LoggingService', 'logPNG_width_height', 
-				new PNGEncoder().encode(bmp), bmp.width, bmp.height);
+			g_gateway.invokeRemoteService('LoggingService', 'logBMP_width_height', 
+				bmp.getPixels(new Rectangle(0, 0, bmp.width, bmp.height)), bmp.width, bmp.height);
 		}
 		
 		public function addI18NKeyToFile(key:String, file:String):void
