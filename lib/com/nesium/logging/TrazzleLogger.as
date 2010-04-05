@@ -2,6 +2,7 @@ package com.nesium.logging
 {
 	
 	import com.nesium.logging.zz;
+	import com.nesium.logging.TrazzleFileService;
 	import com.nesium.remoting.DuplexGateway;
 	
 	import flash.display.BitmapData;
@@ -46,6 +47,7 @@ package com.nesium.logging
 		{
 			g_gateway = new DuplexGateway(k_host, k_port);
 			g_gateway.registerServiceWithName(this, 'FileObservingService');
+			g_gateway.registerServiceWithName(TrazzleFileService.instance(), 'FileService');
 			g_gateway.connectToRemote();
 			g_fileObservers = {};
 		}

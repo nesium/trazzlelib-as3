@@ -7,7 +7,9 @@
 
 package com.nesium.fs{
 
+	import com.nesium.logging.TrazzleFileService;
 	import com.nesium.logging.TrazzleLogger;
+	import com.nesium.logging.zz;
 	import com.nesium.remoting.InvocationResult;
 	
 	import flash.events.Event;
@@ -16,21 +18,67 @@ package com.nesium.fs{
 	import flash.utils.ByteArray;
 	import flash.utils.describeType;
 	
-	public class ZZFileReference extends EventDispatcher{
+	public class FileReference extends EventDispatcher{
+
+		use namespace zz;
 		
 		//*****************************************************************************************
 		//*                                   Private Properties                                  *
 		//*****************************************************************************************
 		private var m_path:String;
+		private var m_refId:Number;
+		
+		private var m_creationDate:Date;
+		private var m_creator:String;
 		private var m_data:ByteArray;
+		private var m_extension:String;
+		private var m_modificationDate:Date;
+		private var m_name:String;
+		private var m_size:Number;
+		private var m_type:String;
 		
 		
 		
 		//*****************************************************************************************
 		//*                                     Public Methods                                    *
 		//*****************************************************************************************
-		public function ZZFileReference(){}
+		public function FileReference(){
+			TrazzleFileService.instance().registerFileRef(this);
+		}
 
+		
+		public function get creationDate():Date{
+			return m_creationDate;
+		}
+		
+		public function get creator():String{
+			return m_creator;
+		}
+		
+		public function get data():ByteArray{
+			return m_data;
+		}
+		
+		public function get extension():String{
+			return m_extension;
+		}
+		
+		public function get modificationDate():Date{
+			return m_modificationDate;
+		}
+		
+		public function get name():String{
+			return m_name;
+		}
+		
+		public function get size():Number{
+			return m_size;
+		}
+		
+		public function get type():String{
+			return m_type;
+		}
+		
 		
 		public function browse(typeFilter:Array = null):Boolean{
 			TrazzleLogger.instance().gateway().invokeRemoteService('FileService', 'browseForFile', 
@@ -44,19 +92,55 @@ package com.nesium.fs{
 				loadInvocation_complete);
 		}
 		
+		override public function toString():String{
+			return '[com.nesium.fs.FileReference] ' + fileAttribsToString();
+		}
+		
+		
+		
+		//*****************************************************************************************
+		//*                                    Internal Methods                                   *
+		//*****************************************************************************************
+		zz function setRefId(anId:Number):void{
+			m_refId = anId;
+		}
+		
 		
 		
 		//*****************************************************************************************
 		//*                                    Private Methods                                    *
 		//*****************************************************************************************
+		private function applyFileAttribDict(aDict:Object):void{
+			m_path = aDict['path'];
+			m_creationDate = aDict['creationDate'];
+			m_creator = aDict['creator'];
+			m_extension = aDict['extension'];
+			m_modificationDate = aDict['modificationDate'];
+			m_name = aDict['name'];
+			m_size = aDict['size'];
+			m_type = aDict['type'];
+		}
+		
+		private function fileAttribsToString():String{
+			return 'creationDate: ' + m_creationDate + ', creator: ' + m_creator + 
+				', extension: ' + m_extension + ', modificationDate: ' + m_modificationDate + 
+				', name: ' + m_name + ', size: ' + m_size + ', type: ' + m_type + 
+				', _path: ' + m_path + ', _refId: ' + m_refId;
+		}
+		
+		
+		
+		//*****************************************************************************************
+		//*                                         Events                                        *
+		//*****************************************************************************************
 		private function browseInvocation_complete(e:Event):void{
 			var result:InvocationResult = e.target as InvocationResult;
 			result.removeEventListener(Event.COMPLETE, browseInvocation_complete);
-			trace(describeType(result.result));
 			if (!result.result){
 				dispatchEvent(new Event(Event.CANCEL));
 			}else{
-				m_path = result.result;
+				applyFileAttribDict(result.result);
+				trace(this);
 				dispatchEvent(new Event(Event.SELECT));
 				load();
 			}

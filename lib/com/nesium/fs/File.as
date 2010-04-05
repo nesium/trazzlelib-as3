@@ -1,5 +1,5 @@
 //
-//  ZZFile.as
+//  File.as
 //
 //  Created by Marc Bauer on 2010-04-03.
 //  Copyright (c) 2010 nesiumdotcom. All rights reserved.
@@ -7,7 +7,7 @@
 
 package com.nesium.fs{
 	
-	public class ZZFile{
+	public class File{
 		
 		//*****************************************************************************************
 		//*                                   Private Properties                                  *
@@ -19,19 +19,19 @@ package com.nesium.fs{
 		//*****************************************************************************************
 		//*                                     Public Methods                                    *
 		//*****************************************************************************************
-		public function ZZFile(path:String){
+		public function File(path:String){
 			m_path = path;
 		}
 		
-		public function get applicationDirectory():ZZFile{
+		public function get applicationDirectory():File{
 			return null;
 		}
 		
-		public function get desktopDirectory():ZZFile{
+		public function get desktopDirectory():File{
 			return null;
 		}
 		
-		public function get documentsDirectory():ZZFile{
+		public function get documentsDirectory():File{
 			return null;
 		}
 		
@@ -71,7 +71,7 @@ package com.nesium.fs{
 			
 		}
 		
-		public function get parent():ZZFile{
+		public function get parent():File{
 			return null;
 		}
 		
@@ -95,7 +95,7 @@ package com.nesium.fs{
 			
 		}
 		
-		public function get userDirectory():ZZFile{
+		public function get userDirectory():File{
 			return null;
 		}
 		
@@ -123,11 +123,11 @@ package com.nesium.fs{
 			
 		}
 		
-		public function clone():ZZFile{
+		public function clone():File{
 			return null;
 		}
 		
-		public function copyToAsync(newLocation:ZZFile, overwrite:Boolean = false):void{
+		public function copyToAsync(newLocation:File, overwrite:Boolean = false):void{
 			
 		}
 		
@@ -135,7 +135,7 @@ package com.nesium.fs{
 			
 		}
 		
-		public function createTempDirectory():ZZFile{
+		public function createTempDirectory():File{
 			return null;
 		}
 		
@@ -151,7 +151,7 @@ package com.nesium.fs{
 			
 		}
 		
-		public function getRelativePath(ref:ZZFile, useDotDot:Boolean = false):String{
+		public function getRelativePath(ref:File, useDotDot:Boolean = false):String{
 			return null;
 		}
 		
@@ -159,7 +159,7 @@ package com.nesium.fs{
 			return null;
 		}
 		
-		public function moveToAsync(newLocation:ZZFile, overwrite:Boolean = false):void{
+		public function moveToAsync(newLocation:File, overwrite:Boolean = false):void{
 			
 		}
 		
@@ -167,7 +167,7 @@ package com.nesium.fs{
 			
 		}
 		
-		public function resolvePath(path:String):ZZFile{
+		public function resolvePath(path:String):File{
 			return null;
 		}
 	}
