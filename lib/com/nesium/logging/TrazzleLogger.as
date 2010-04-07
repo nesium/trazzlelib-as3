@@ -2,7 +2,6 @@ package com.nesium.logging
 {
 	
 	import com.nesium.logging.zz;
-	import com.nesium.logging.TrazzleFileService;
 	import com.nesium.remoting.DuplexGateway;
 	
 	import flash.display.BitmapData;
@@ -23,12 +22,21 @@ package com.nesium.logging
 	public class TrazzleLogger extends EventDispatcher
 	{
 		
+		//*****************************************************************************************
+		//*                                   Public Properties                                   *
+		//*****************************************************************************************
+		public static var g_baseStackIndex:uint = 3;
+		
+		
 		
 		//*****************************************************************************************
 		//*                                   Private Properties                                  *
 		//*****************************************************************************************
 		private static const k_host:String = 'localhost';
 		private static const k_port:Number = 3457;
+		private static const k_version:Number = 1;
+		private static const k_marketingVersion:String = '1.5.1';
+		
 		private static var g_instance:TrazzleLogger;
 		private static var g_gateway:DuplexGateway;
 		private static var g_stage:Stage;
@@ -47,7 +55,6 @@ package com.nesium.logging
 		{
 			g_gateway = new DuplexGateway(k_host, k_port);
 			g_gateway.registerServiceWithName(this, 'FileObservingService');
-			g_gateway.registerServiceWithName(TrazzleFileService.instance(), 'FileService');
 			g_gateway.connectToRemote();
 			g_fileObservers = {};
 		}
@@ -63,6 +70,8 @@ package com.nesium.logging
 			var params:Object = objCopy.readObject();
 			params.swfURL = theStage.loaderInfo.url;
 			params.applicationName = title;
+			params.version = k_version;
+			params.marketingVersion = k_marketingVersion;
 			g_gateway.invokeRemoteService('CoreService', 'setConnectionParams', params);
 		}
 		
@@ -224,7 +233,7 @@ package com.nesium.logging
 		private function send(message:String, stackIndex:uint=0):void
 		{
 			var logMessage:LogMessageVO = new LogMessageVO(message, new Error().getStackTrace(), 
-				stackIndex + 4);
+				stackIndex + g_baseStackIndex);
 			g_gateway.invokeRemoteService('LoggingService', 'log', logMessage);
 		}
 		

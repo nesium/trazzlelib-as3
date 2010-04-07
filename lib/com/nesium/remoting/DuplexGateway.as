@@ -259,6 +259,12 @@ package com.nesium.remoting
 					processResponse(targetComponents[0], methodName, body.data, index, resultType);
 					continue;
 				}
+				if (!service){
+					throw new Error('No service with name ' + targetComponents[0] + ' registered!');
+				}else if (!service.hasOwnProperty(methodName)){
+					throw new Error('Service ' + targetComponents[0] + ' has no method named ' + 
+						methodName);
+				}
 				var result:* = service[methodName].apply(service, (body.data is Array ? 
 					body.data : [body.data]));
 				var isOneway:Boolean = describeType(service)..method.(@name == methodName).
