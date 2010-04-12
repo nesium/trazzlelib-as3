@@ -261,12 +261,15 @@ package com.nesium.remoting
 				}
 				if (!service){
 					throw new Error('No service with name ' + targetComponents[0] + ' registered!');
-				}else if (!service.hasOwnProperty(methodName)){
-					throw new Error('Service ' + targetComponents[0] + ' has no method named ' + 
-						methodName);
 				}
-				var result:* = service[methodName].apply(service, (body.data is Array ? 
-					body.data : [body.data]));
+				// @todo check if method exists. 
+				try{
+					var result:* = service[methodName].apply(service, (body.data is Array ? 
+						body.data : [body.data]));
+				}catch (e:Error){
+					throw new Error('Could not execute method ' + methodName + ' on service ' + 
+						targetComponents[0] + ' with argument(s) ' + body.data);
+				}
 				var isOneway:Boolean = describeType(service)..method.(@name == methodName).
 					@returnType == 'void';
 				if (!isOneway)

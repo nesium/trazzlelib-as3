@@ -34,8 +34,8 @@ package com.nesium.logging
 		//*****************************************************************************************
 		private static const k_host:String = 'localhost';
 		private static const k_port:Number = 3457;
-		private static const k_version:Number = 1;
-		private static const k_marketingVersion:String = '1.5.1';
+		private static const k_version:Number = 2;
+		private static const k_marketingVersion:String = '1.5.1.1';
 		
 		private static var g_instance:TrazzleLogger;
 		private static var g_gateway:DuplexGateway;
