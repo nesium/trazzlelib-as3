@@ -10,6 +10,7 @@ package com.nesium.logging{
 	import flash.events.TimerEvent;
 	import flash.geom.Rectangle;
 	import flash.net.registerClassAlias;
+	import flash.system.Capabilities;
 	import flash.system.System;
 	import flash.utils.ByteArray;
 	import flash.utils.describeType;
@@ -68,6 +69,7 @@ package com.nesium.logging{
 			params.applicationName = title;
 			params.version = k_version;
 			params.marketingVersion = k_marketingVersion;
+			params.player = {isDebugger:Capabilities.isDebugger, version:Capabilities.version};
 			g_gateway.invokeRemoteService('CoreService', 'setConnectionParams', params);
 		}
 		
