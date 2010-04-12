@@ -1,5 +1,4 @@
-package com.nesium.logging
-{
+package com.nesium.logging{
 	
 	import com.nesium.logging.zz;
 	import com.nesium.remoting.DuplexGateway;
@@ -19,8 +18,7 @@ package com.nesium.logging
 	
 	
 	
-	public class TrazzleLogger extends EventDispatcher
-	{
+	public class TrazzleLogger extends EventDispatcher{
 		
 		//*****************************************************************************************
 		//*                                   Public Properties                                   *
@@ -51,8 +49,7 @@ package com.nesium.logging
 		//*****************************************************************************************
 		//*                                     Public Methods                                    *
 		//*****************************************************************************************
-		public function TrazzleLogger()
-		{
+		public function TrazzleLogger(){
 			g_gateway = new DuplexGateway(k_host, k_port);
 			g_gateway.registerServiceWithName(this, 'FileObservingService');
 			g_gateway.connectToRemote();
@@ -60,8 +57,7 @@ package com.nesium.logging
 		}
 		
 		
-		public function setParams(theStage:Stage, title:String):void
-		{
+		public function setParams(theStage:Stage, title:String):void{
 			if (g_stage) return;
 			g_stage = theStage;
 			var objCopy:ByteArray = new ByteArray();
@@ -75,19 +71,24 @@ package com.nesium.logging
 			g_gateway.invokeRemoteService('CoreService', 'setConnectionParams', params);
 		}
 		
-		public function stage():Stage
-		{
+		public function stage():Stage{
 			return g_stage;
 		}
 		
-		public function log(msg:String, stackIndex:uint=0):void
-		{
-			if (!g_stage)
-			{
+		public function log(msg:String, stackIndex:uint=0):void{
+			if (!g_stage){
 				throwNotInitedError();
 				return;
 			}
 			send(msg, stackIndex);
+		}
+		
+		public function logObject(msg:String, complexObject:Object, stackIndex:uint=0):void{
+			if (!g_stage){
+				throwNotInitedError();
+				return;
+			}
+			send(msg, stackIndex, complexObject);
 		}
 		
 		public function beep():void{
@@ -98,10 +99,8 @@ package com.nesium.logging
 			g_gateway.invokeRemoteService('LoggingService', 'beep');
 		}
 		
-		public function logBitmapData(bmp:BitmapData):void
-		{
-			if (!g_stage)
-			{
+		public function logBitmapData(bmp:BitmapData):void{
+			if (!g_stage){
 				throwNotInitedError();
 				return;
 			}
@@ -109,20 +108,16 @@ package com.nesium.logging
 				bmp.getPixels(new Rectangle(0, 0, bmp.width, bmp.height)), bmp.width, bmp.height);
 		}
 		
-		public function addI18NKeyToFile(key:String, file:String):void
-		{
-			if (!g_stage)
-			{
+		public function addI18NKeyToFile(key:String, file:String):void{
+			if (!g_stage){
 				throwNotInitedError();
 				return;
 			}
 			g_gateway.invokeRemoteService('LoggingService', 'addI18NKey_toFile', key, file);
 		}
 		
-		public function startPerformanceMonitoring():void
-		{
-			if (!g_stage)
-			{
+		public function startPerformanceMonitoring():void{
+			if (!g_stage){
 				throwNotInitedError();
 				return;
 			}
@@ -136,41 +131,32 @@ package com.nesium.logging
 			g_gateway.invokeRemoteService('MonitoringService', 'startMonitoring', g_stage.frameRate);
 		}
 		
-		public function observeFile(path:String, callback:Function, remove:Boolean=false):void
-		{
-			if (!g_stage)
-			{
+		public function observeFile(path:String, callback:Function, remove:Boolean=false):void{
+			if (!g_stage){
 				throwNotInitedError();
 				return;
 			}
 			var observers:Array = g_fileObservers[path];
 			var index:int;
-			if (observers && (index = observers.indexOf(callback)) != -1)
-			{
-				if (remove)
-				{
+			if (observers && (index = observers.indexOf(callback)) != -1){
+				if (remove){
 					observers.splice(index, 1);
-					if (observers.length == 0)
-					{
+					if (observers.length == 0){
 						g_gateway.invokeRemoteService('FileObservingService', 'stopObservingFile', 
 							path);
 						g_fileObservers[path] = null;
 					}
 				}
-			}
-			else if (!remove)
-			{
+			}else if (!remove){
 				observers = g_fileObservers[path] = [];
 				observers.push(callback);
 				g_gateway.invokeRemoteService('FileObservingService', 'startObservingFile', path);
 			}
 		}
 		
-		public function stopPerformanceMonitoring():void
-		{
+		public function stopPerformanceMonitoring():void{
 			if (!g_monitorTimer) return;
-			if (!g_stage)
-			{
+			if (!g_stage){
 				throwNotInitedError();
 				return;
 			}
@@ -181,10 +167,8 @@ package com.nesium.logging
 			g_gateway.invokeRemoteService('MonitoringService', 'stopMonitoring');
 		}
 		
-		public function inspectObject(obj:*):void
-		{
-			if (!g_stage)
-			{
+		public function inspectObject(obj:*):void{
+			if (!g_stage){
 				throwNotInitedError();
 				return;
 			}
@@ -192,20 +176,17 @@ package com.nesium.logging
 				describeType(obj));
 		}
 		
-		public function gateway():DuplexGateway
-		{
+		public function gateway():DuplexGateway{
 			return g_gateway;
 		}
 		
-		public static function instance():TrazzleLogger
-		{
+		public static function instance():TrazzleLogger{
 			if (!g_instance) 
 				g_instance = new TrazzleLogger();
 			return g_instance;
 		}
 		
-		public static function throwNotInitedError():void
-		{
+		public static function throwNotInitedError():void{
 			if (g_notInitedErrorThrown) return;
 			g_notInitedErrorThrown = true;
 			throw new Error('TrazzleLogger not inited. Please make sure to call zz_init before ' + 
@@ -217,8 +198,7 @@ package com.nesium.logging
 		//*****************************************************************************************
 		//*                                    Internal Methods                                   *
 		//*****************************************************************************************
-		zz function fileDidChange(path:String):void
-		{
+		zz function fileDidChange(path:String):void{
 			var observers:Array = g_fileObservers[path];
 			if (!observers) return;
 			for each (var observer:Function in observers)
@@ -230,10 +210,9 @@ package com.nesium.logging
 		//*****************************************************************************************
 		//*                                    Private Methods                                    *
 		//*****************************************************************************************
-		private function send(message:String, stackIndex:uint=0):void
-		{
+		private function send(message:String, stackIndex:uint=0, complexObject:Object=null):void{
 			var logMessage:LogMessageVO = new LogMessageVO(message, new Error().getStackTrace(), 
-				stackIndex + g_baseStackIndex);
+				stackIndex + g_baseStackIndex, complexObject);
 			g_gateway.invokeRemoteService('LoggingService', 'log', logMessage);
 		}
 		
@@ -242,13 +221,11 @@ package com.nesium.logging
 		//*****************************************************************************************
 		//*                                         Events                                        *
 		//*****************************************************************************************
-		private function stage_enterFrame(e:Event):void
-		{
+		private function stage_enterFrame(e:Event):void{
 			g_lastFrames++;
 		}
 		
-		private function monitorTimer_tick(e:TimerEvent):void
-		{
+		private function monitorTimer_tick(e:TimerEvent):void{
 			var now:Number = getTimer();
 			var fps:Number = g_lastFrames / (getTimer() - g_lastTimeStamp) * 1000;
 			g_lastFrames = 0;
@@ -263,8 +240,7 @@ package com.nesium.logging
 import flash.net.registerClassAlias;
 import flash.utils.getTimer;
 
-internal class LogMessageVO
-{
+internal class LogMessageVO{
 	
 	{registerClassAlias('FlashLogMessage', LogMessageVO);}
 	
@@ -278,14 +254,14 @@ internal class LogMessageVO
 	public var levelName:String;
 	public var timestamp:Number;
 	public var stackIndex:uint;
+	public var complexObject:Object;
 	
 	
 	
 	//*****************************************************************************************
 	//*                                   Private Properties                                  *
 	//*****************************************************************************************
-	private static var g_levels:Object =
-	{
+	private static var g_levels:Object = {
 		d:'debug',
 		i:'info',
 		n:'notice',
@@ -300,16 +276,14 @@ internal class LogMessageVO
 	//*****************************************************************************************
 	//*                                     Public Methods                                    *
 	//*****************************************************************************************
-	public function LogMessageVO(aMessage:String, aStacktrace:String, aStackIndex:uint)
-	{
+	public function LogMessageVO(aMessage:String, aStacktrace:String, aStackIndex:uint, 
+		aComplexObject:Object=null){
 		levelName = '';
-		if (aMessage.charAt(0) == '#')
-		{
+		if (aMessage.charAt(0) == '#'){
 			aMessage = aMessage.substr(1);
 			encodeHTML = false;
 		}
-		if (aMessage.charAt(1) == ' ')
-		{
+		if (aMessage.charAt(1) == ' '){
 			levelName = g_levels[aMessage.charAt(0)] || '';
 			aMessage = aMessage.substr(2);
 		}
@@ -317,5 +291,6 @@ internal class LogMessageVO
 		message = aMessage;
 		stacktrace = aStacktrace;
 		stackIndex = aStackIndex;
+		complexObject = aComplexObject;
 	}
 }
