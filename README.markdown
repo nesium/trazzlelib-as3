@@ -21,5 +21,5 @@ For more parameters either look in the source or try the demo app at http://gith
 
 ### Third-Party Wrapper
 
-<http://github.com/base42/LogMeister>
+<http://github.com/base42/LogMeister>  
 <http://vaclav.vancura.org/trazzlepublisher>
