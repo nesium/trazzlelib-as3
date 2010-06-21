@@ -18,3 +18,8 @@ Afterwards you can call `log()` and friends.
 ### See also
 
 For more parameters either look in the source or try the demo app at http://github.com/nesium/trazzle-demo-app
+
+### Third-Party Wrapper
+
+<http://github.com/base42/LogMeister>
+<http://vaclav.vancura.org/trazzlepublisher>
