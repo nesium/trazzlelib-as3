@@ -206,6 +206,7 @@ package com.nesium.remoting
 			var ba:ByteArray = actionMessageToByteArray(am);
 			m_socket.writeUnsignedInt(ba.length);
 			m_socket.writeBytes(ba);
+			m_socket.flush();
 		}
 		
 		protected function actionMessageToByteArray(am:AMFActionMessage):ByteArray
